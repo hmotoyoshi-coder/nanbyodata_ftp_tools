@@ -26,7 +26,7 @@ done < ${config_file_path}
 
 
 # target directoryに値がないとき、新しくlatestのリンクを作成し、古いファイルと新しいファイルの差分がない場合新しいファイルを作成する
-old_file=`readlink "${target_directory}/latest" | sed -E 's|([0-9]{4}-[0-9]{2}-[0-9]{2}).*|\1|g'`
+old_file=`ls --time=ctime "${target_directory}" | grep -v latest | grep -v ${date_num} | sort | tail -n 1`
 check_target="${target_directory}/${old_file}"
 
 echo "${check_target}との差分を確認"
