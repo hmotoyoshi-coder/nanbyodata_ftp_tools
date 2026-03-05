@@ -8,8 +8,6 @@ target_directory="/work/data"
 config_file_path="/work/configs/copy_file_list_local.csv"
 date_num=${DATE_NUM}
 
-echo ${date_num}
-
 mkdir -p $tmp_directory
 
 # 全データ取得
@@ -19,7 +17,7 @@ while IFS=, read -r file_name_with_suffix file_path; do
         continue
     fi
     # TODO: 修正変更
-    # scp "case@${file_path}" ${tmp_directory}/
+    # scp -P xxxx -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_DOMAIN}:${file_path} ${tmp_directory}
     cp ${file_path} ${tmp_directory}
     if [ $? -ne 0 ]; then
         echo "[ERROR] ${file_path} のコピー失敗"
@@ -30,7 +28,9 @@ done < ${config_file_path}
 # target directoryに値がないとき、新しくlatestのリンクを作成し、古いファイルと新しいファイルの差分がない場合新しいファイルを作成する
 old_file=`readlink "${target_directory}/latest" | sed -E 's|([0-9]{4}-[0-9]{2}-[0-9]{2}).*|\1|g'`
 check_target="${target_directory}/${old_file}"
+
 echo "${check_target}との差分を確認"
+
 target="${target_directory}/${date_num}"
 mkdir -p ${target}
 
