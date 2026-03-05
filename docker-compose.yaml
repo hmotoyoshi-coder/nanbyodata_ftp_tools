@@ -7,13 +7,15 @@ services:
       - ./scripts:/work/scripts
 
       # 開発用
-      - ./testdata:/work/testdata
+      # - ./testdata:/work/testdata
       - ${SSH_AUTH_SOCK}:/tmp/ssh-agent.sock
-    user: "${UID}:${GID}"
+    # user: "${UID}:${GID}"
     environment:
       DATE_NUM: "2026-03-05"
       SSH_AUTH_SOCK: /tmp/ssh-agent.sock
       REMOTE_HOST: ${REMOTE_HOST}
       REMOTE_USER: ${REMOTE_USER}
+    dns:
+      - host-gateway
 
       # - ../source_data:/work/source_data
