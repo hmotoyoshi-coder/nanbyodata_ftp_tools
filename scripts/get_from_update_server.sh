@@ -16,9 +16,9 @@ while IFS=, read -r file_name_with_suffix file_path; do
     if [ ${file_name_with_suffix} == 'file_name_with_suffix' ]; then
         continue
     fi
-    # TODO: 修正変更
-    # scp -P xxxx -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_DOMAIN}:${file_path} ${tmp_directory}
-    cp ${file_path} ${tmp_directory}
+    # 開発用
+    # cp ${file_path} ${tmp_directory}
+    scp -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_DOMAIN}:${file_path} ${tmp_directory}
     if [ $? -ne 0 ]; then
         echo "[ERROR] ${file_path} のコピー失敗"
     fi
