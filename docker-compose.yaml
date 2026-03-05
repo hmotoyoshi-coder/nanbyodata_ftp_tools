@@ -1,0 +1,8 @@
+services:
+  dlfile_cp:
+    build: .
+    volumes:
+      - ./configs:/work/configs
+      - ./scripts:/work/scripts
+      - ./target:/work/data
+      # - ../source_data:/work/source_data
