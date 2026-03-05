@@ -2,7 +2,13 @@ services:
   dlfile_cp:
     build: .
     volumes:
-      - ./configs:/work/configs
+      - ${CONFIG_PATH:-./configs}:/work/configs
+      - ${TARGET_DIRECTORY:-./download}:/work/data
       - ./scripts:/work/scripts
-      - ./target:/work/data
+
+      # 開発用
+      - ./testdata:/work/testdata
+    environment:
+      API_LIST: "${CONFIG_PATH:-./configs}/api_list.csv"
+      DATE_NUM: "2026-03-05"
       # - ../source_data:/work/source_data

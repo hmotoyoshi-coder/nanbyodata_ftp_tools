@@ -1,5 +1,7 @@
 # 開発時にデータ配置先として使用
 target/
+download/
+testdata/
 
 .env
 

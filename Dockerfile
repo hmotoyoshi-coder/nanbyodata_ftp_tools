@@ -12,4 +12,4 @@ RUN curl -L https://github.com/duckdb/duckdb/releases/download/v1.1.3/duckdb_cli
     && unzip duckdb.zip -d /usr/local/bin \
     && rm duckdb.zip
 
-# ENTRYPOINT [ "/bin/sh" ]
+ENTRYPOINT [ "/bin/bash" ]
