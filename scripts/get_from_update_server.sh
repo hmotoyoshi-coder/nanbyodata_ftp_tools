@@ -5,7 +5,7 @@ source ./scripts/get_from_api_functions.sh
 
 tmp_directory=tmp
 target_directory="/work/data"
-config_file_path="/work/configs/copy_file_list_local.csv"
+config_file_path="/work/configs/copy_file_list.csv"
 date_num=${DATE_NUM}
 
 mkdir -p $tmp_directory
@@ -18,7 +18,7 @@ while IFS=, read -r file_name_with_suffix file_path; do
     fi
     # 開発用
     # cp ${file_path} ${tmp_directory}
-    scp -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_DOMAIN}:${file_path} ${tmp_directory}
+    scp -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST}:${file_path} ${tmp_directory}
     if [ $? -ne 0 ]; then
         echo "[ERROR] ${file_path} のコピー失敗"
     fi
