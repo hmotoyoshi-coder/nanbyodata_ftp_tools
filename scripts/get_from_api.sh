@@ -27,8 +27,8 @@ for file in `ls ${tmp_directory}`; do
 done
 
 (
-    cd "${output_directory}"
-    ln -sfn "./${new_date}" latest
+    cd "${target_directory}"
+    ln -sfn "./${date_num}" latest
 )
 
 # # hashチェック
