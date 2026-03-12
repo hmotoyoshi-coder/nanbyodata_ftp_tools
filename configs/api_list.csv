@@ -1,0 +1,11 @@
+output,api,form
+hpo_data,https://dev-nanbyodata.dbcls.jp/sparqlist/api/test_get_hpo_data_list,https://nanbyodata.jp/rdf/ontology/hp|https://nanbyodata.jp/rdf/ontology/mondo|https://nanbyodata.jp/rdf/ontology/nando|https://nanbyodata.jp/rdf/pcf
+japan_curated_gene,https://dev-nanbyodata.dbcls.jp/sparqlist/api/test_get_japan_curated_gene_list,https://nanbyodata.jp/rdf/nanbyodata|https://nanbyodata.jp/rdf/pcf
+kegg,https://dev-nanbyodata.dbcls.jp/sparqlist/api/test_get_kegg_list,https://nanbyodata.jp/rdf/ontology/nando|https://nanbyodata.jp/rdf/nanbyodata
+nando,https://dev-nanbyodata.dbcls.jp/sparqlist/api/test_get_nando_list,https://nanbyodata.jp/rdf/ontology/nando|https://nanbyodata.jp/rdf/ontology/hp|https://nanbyodata.jp/rdf/pcf
+nbdc_human_databases_info_by_nando_id,https://dev-nanbyodata.dbcls.jp/sparqlist/api/test_get_nbdc_human_databases_info_by_nando_id_list,https://nanbyodata.jp/rdf/nanbyodata|https://nanbyodata.jp/rdf/ontology/nando
+riken_brc_cell,https://dev-nanbyodata.dbcls.jp/sparqlist/api/test_get_riken_brc_cell_list,http://metadb.riken.jp/db/xsearch_cell_brso|http://metadb.riken.jp/db/cell_diseaseID
+riken_brc_dna,https://dev-nanbyodata.dbcls.jp/sparqlist/api/test_get_riken_brc_dna_list,
+riken_brc_mouse,https://dev-nanbyodata.dbcls.jp/sparqlist/api/test_get_riken_brc_mouse_list,
+nando_hp,https://dev-nanbyodata.dbcls.jp/sparqlist/api/Get_all_hp_id_by_NANDO_JSON,'NanbyoData'
+nando_gene,https://dev-nanbyodata.dbcls.jp/sparqlist/api/Get_all_gene_id_by_NANDO_JSON,'NanbyoData'

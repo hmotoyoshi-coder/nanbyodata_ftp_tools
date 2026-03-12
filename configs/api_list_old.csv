@@ -1,0 +1,6 @@
+output,api,version
+japan_curated_gene,https://dev-nanbyodata.dbcls.jp/sparqlist/api/test_get_japan_curated_gene_list,'APIで取得'
+riken_brc_cell,https://dev-nanbyodata.dbcls.jp/sparqlist/api/test_get_riken_brc_cell_list,'APIで取得'
+nando_hp,https://dev-nanbyodata.dbcls.jp/sparqlist/api/Get_all_hp_id_by_NANDO_JSON,'NanbyoData'
+nando_gene,https://dev-nanbyodata.dbcls.jp/sparqlist/api/Get_all_gene_id_by_NANDO_JSON,'NanbyoData'
+nbdc_human_databases_info_by_nando_id,https://dev-nanbyodata.dbcls.jp/sparqlist/api/test_get_nbdc_human_databases_info_by_nando_id_list,'NanbyoData'

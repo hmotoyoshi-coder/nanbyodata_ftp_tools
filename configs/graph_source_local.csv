@@ -1,0 +1,10 @@
+api,version_source,database,format
+https://nanbyodata.jp/rdf/ontology/hp,copy_source/ontologies/hp/latest/hp.owl,Human Phenotype Ontology,owl:versionIRI
+https://nanbyodata.jp/rdf/medgen,copy_source/medgen_rdf/latest/metadata.yaml,MedGen,issued
+https://nanbyodata.jp/rdf/mgend,,MGeND,API
+https://nanbyodata.jp/rdf/ontology/mondo,copy_source/ontologies/mondo/latest/mondo.owl,Mondo Disease Ontology,owl:versionIRI
+https://nanbyodata.jp/rdf/ontology/mp,copy_source/mp/latest/mp-international.owl,Mammalian Phenotype Ontology,owl:versionIRI
+https://nanbyodata.jp/rdf/ontology/nando,copy_source/ontologies/nando/latest/nando.ttl,Nanbyo Disease Ontology,owl:versionIRI
+https://nanbyodata.jp/rdf/ontology/ordo,copy_source/ontologies/ordo/latest/ORDO_en_4.6.owl,,terms:created
+https://nanbyodata.jp/rdf/pcf,,,API
+https://nanbyodata.jp/rdf/nanbyodata,,,API

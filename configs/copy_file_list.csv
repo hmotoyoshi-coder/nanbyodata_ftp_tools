@@ -1,0 +1,4 @@
+file_name_with_suffix,file_path
+nando.rdf,/opt/services/case/data/nanbyodata_updater/data/NANDO/latest/nando.rdf
+nando.ttl,/opt/services/case/data/nanbyodata_updater/data/NANDO/latest/nando.ttl
+nando.xlsx,/opt/services/case/data/nanbyodata_updater/data/NANDO/latest/nando.xlsx

@@ -9,21 +9,6 @@ help_message () {
     echo "  -t, -t or -o の指定必須. 日付指定で出力先ディレクトリを指定"
 }
 
-create_latest_dir () {
-    # 作業するディレクトリ
-    local target_dir=${output_directory}
-    # YYYYMMDD形式の日付を取得
-    current_date=$(date +"%Y-%m-%d")
-    # 新しいディレクトリを作成
-    mkdir -p "$target_dir/$current_date"
-    # 最新のシンボリックリンクを削除してから新しいリンクを作成
-    (
-        cd "$target_dir"
-        ln -sfn "./$current_date" latest
-    )
-    echo "Directory $target_dir/$current_date created and latest symlink updated."
-}
-
 get_data () {
     local api=$api_uri
     local output=$file_name
@@ -42,7 +27,7 @@ get_data () {
 
     # 取得したJSONがテーブルとして認識可能かどうかを確認
     # 計算量を軽くするため、一行のみ検証
-    if ! duckdb -c "COPY(SELECT * FROM read_json('${tmp_file}.json') LIMIT 1) TO '/dev/null'" >/dev/null 2>&1; then
+    if ! duckdb -c "SELECT * FROM read_json_auto('${tmp_file}.json') LIMIT 1" >/dev/null 2>&1; then
         echo "[ERROR] data which download from ${api} can not change to table." >> "${tmp_directory}/error.log"
         mkdir -p "${tmp_directory}/error_data"
         mv "${tmp_file}.json" "${tmp_directory}/error_data/"
@@ -52,9 +37,10 @@ get_data () {
     echo "download data change to text file"
     duckdb -c "
         COPY(
-            SELECT * FROM read_json('${tmp_file}.json')
+            SELECT * FROM read_json_auto('${tmp_file}.json')
         ) to '${tmp_file}.txt' (HEADER, DELIMITER '\t');
     "
+    qa_check "${tmp_file}.txt" "api"
     return 0
 }
 
@@ -73,7 +59,7 @@ get_all () {
 
     for api in ${!api_map[@]}; do
         local api_uri=${api}
-        local file_name=`echo ${api_map[${api}]} | sed 's/[[:space:]]*$//'`
+        local file_name="${api_map[${api}]}"
         # local tmp_file="${tmp_directory}/${output}"     # 未使用?
 
         # データを取得できなかった場合、次のデータの取得に移行する
@@ -102,16 +88,46 @@ cp_file () {
     fi
 }
 
-# file_check () {
-#     if [ `ls ${target}/ | grep -q ${file}; echo $?` -eq 1 ]; then
-#         echo "${file}はコピーされていません"
-#         continue
-#     fi
+qa_check () {
+    local file_path="$1"
+    local data_type="$2"   # api or nando
+    local log_file="${tmp_directory}/error.log"
 
-#     hash=`shasum -a 256 ${path}/tmp/${file} | awk '{print $1}'`
+    # ファイル存在確認
+    if [ ! -f "$file_path" ]; then
+        echo "[$(date '+%Y-%m-%d %H:%M:%S')] [QA_ERROR] File not found: $file_path" >> "$log_file"
+        return 0
+    fi
 
-#     if [ `echo "${hash} *${target}/${file}" | shasum -a 256 -c -s; echo $?` -eq 1 ]; then
-#         echo "${file}は正しくコピーされませんでした"
-#         continue
-#     fi
-# }
+    # ファイルサイズチェック
+    if [ ! -s "$file_path" ]; then
+        echo "[$(date '+%Y-%m-%d %H:%M:%S')] [QA_ERROR] File is empty: $file_path" >> "$log_file"
+    fi
+
+    # APIデータのみレコード数チェック
+    if [ "$data_type" = "api" ]; then
+        local base="${file_path%.txt}"
+        local json_file="${base}.json"
+
+        if [ -f "$json_file" ]; then
+            json_count=$(duckdb -csv -c "SELECT COUNT(*) FROM read_json_auto('${json_file}');" 2>/dev/null | tail -n 1 | tr -d '\r')
+            tsv_count=$(($(wc -l < "$file_path") - 1))  # header除く
+
+            if [ "$json_count" != "$tsv_count" ]; then
+                echo "[$(date '+%Y-%m-%d %H:%M:%S')] [QA_ERROR] Record count mismatch: $file_path json=${json_count} tsv=${tsv_count}" >> "$log_file"
+            fi
+        else
+            echo "[$(date '+%Y-%m-%d %H:%M:%S')] [QA_ERROR] JSON not found for API data: $json_file" >> "$log_file"
+        fi
+    fi
+
+    # ハッシュ取得（ログ用途）
+    if command -v sha256sum >/dev/null 2>&1; then
+        hash=$(sha256sum "$file_path" | awk '{print $1}')
+        if [ -z "$hash" ]; then
+            echo "[$(date '+%Y-%m-%d %H:%M:%S')] [QA_ERROR] Failed to calculate hash: $file_path" >> "$log_file"
+        fi
+    fi
+
+    return 0
+}
