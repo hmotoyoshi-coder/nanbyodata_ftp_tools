@@ -8,7 +8,7 @@ services:
       - ${SSH_AUTH_SOCK}:/tmp/ssh-agent.sock
         # user: "${UID}:${GID}"
     environment:
-      DATE_NUM: "2026-03-05"
+      DATE_NUM: ${DATE_NUM}
       SSH_AUTH_SOCK: /tmp/ssh-agent.sock
       REMOTE_HOST: ${REMOTE_HOST}
       REMOTE_USER: ${REMOTE_USER}
