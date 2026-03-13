@@ -6,7 +6,7 @@ services:
       - ${TARGET_DIRECTORY:-./download}:/work/data
       - ./scripts:/work/scripts
       - ${SSH_AUTH_SOCK}:/tmp/ssh-agent.sock
-        # user: "${UID}:${GID}"
+    user: "${UID}:${GID}"
     environment:
       DATE_NUM: ${DATE_NUM}
       SSH_AUTH_SOCK: /tmp/ssh-agent.sock
