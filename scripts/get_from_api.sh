@@ -4,11 +4,15 @@
 source ./scripts/get_from_api_functions.sh
 
 tmp_directory=tmp
+# 本番
 # target_directory="/work/data"
-target_directory="/home/s.shimizu/DBCLS/test_data" #
+# 検証
+target_directory="../test_data" 
+# 本番
 # config_file_path="/work/configs/api_list.csv"
-config_file_path="../configs/api_list.csv" #
-date_num=${DATE_NUM}
+# 検証
+config_file_path="../configs/api_list.csv"
+date_num=${DATE_NUM:-$(date +%Y-%m-%d)}
 
 mkdir -p "${tmp_directory}"
 
@@ -22,7 +26,7 @@ check_target="${target_directory}/${old_file}"
 echo "${check_target}との差分を確認"
 
 target="${target_directory}/${date_num}"
-mkdir -p ${target}
+mkdir -p "${target}"
 
 for file in ${tmp_directory}/*; do
     [ -f "$file" ] || continue
@@ -39,4 +43,4 @@ if [ -f "${tmp_directory}/error.log" ]; then
     cat "${tmp_directory}/error.log" >> "${target}/error.log"
 fi
 
-rm -rf ${tmp_directory}
+rm -rf "${tmp_directory}"

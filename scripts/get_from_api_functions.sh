@@ -24,7 +24,7 @@ get_data () {
 
     # 取得したJSONがテーブルとして認識可能かどうかを確認
     # 計算量を軽くするため、一行のみ検証
-    if ! duckdb -c "COPY(SELECT * FROM read_json_auto('${tmp_file}.json') LIMIT 1) TO '/dev/null'" >/dev/null 2>&1; then
+    if ! duckdb -c "SELECT * FROM read_json_auto('${tmp_file}.json') LIMIT 1" >/dev/null 2>&1; then
         echo "[ERROR] data which download from ${api} can not change to table." >> "${tmp_directory}/error.log"
         mkdir -p "${tmp_directory}/error_data"
         mv "${tmp_file}.json" "${tmp_directory}/error_data/"
@@ -34,13 +34,11 @@ get_data () {
     echo "download data change to text file"
     duckdb -c "
         COPY(
-            SELECT * FROM read_json_auto('${tmp_file}.json')
+            SELECT * FROM read_json_auto('${tmp_file}.json', format='array')
         ) to '${tmp_file}.txt' (HEADER, DELIMITER '\t');
     "
 
     qa_check "${tmp_file}.txt" "api"
-
-    rm -f "${tmp_file}.json"
 
     return 0
 }
@@ -48,7 +46,6 @@ get_data () {
 get_all () {
     declare -A api_map
     local config_file_path=${config_file_path}
-    local tmp_directory=${tmp_directory}
 
     while IFS=, read -r output api version; do
         # ヘッダーを省く
@@ -56,7 +53,7 @@ get_all () {
             continue
         fi
         api_map["$api"]="$output"
-    done < $config_file_path
+    done < "${config_file_path}"
 
     for api in ${!api_map[@]}; do
         local api_uri=${api}
@@ -76,14 +73,14 @@ cp_file () {
         local hash=$(sha256sum "${tmp_directory}/${file}" | awk '{print $1}')
         # すでにftpにファイルが置いてある→hashが一致する場合は上書きしない
         if ! echo "${hash}  ${check_target}/${file}" | sha256sum -c --status; then
-            cp ${tmp_directory}/${file} ${target}/${file}
+            cp "${tmp_directory}/${file}" "${target}/${file}"
             echo "update ${target}/${file}"
         else
-            cp -p ${check_target}/${file} ${target}/${file}
+            cp -p "${check_target}/${file}" "${target}/${file}"
             echo "${target}/${file} is not change from ${check_target}/${file}"
         fi
     else
-        cp ${tmp_directory}/${file} ${target}/${file}
+        cp "${tmp_directory}/${file}" "${target}/${file}"
         echo "update ${target}/${file}"
     fi
 }
@@ -111,7 +108,7 @@ qa_check () {
         local json_file="${base}.json"
 
         if [ -f "$json_file" ]; then
-            json_count=$(duckdb -csv -c "SELECT COUNT(*) FROM read_json_auto('${json_file}');" 2>/dev/null | tail -n 1)
+            json_count=$(duckdb -csv -c "SELECT COUNT(*) FROM read_json_auto('${json_file}', format='array');" 2>/dev/null | tail -n 1)
             tsv_count=$(($(wc -l < "$file_path") - 1))
 
             if [ "$json_count" != "$tsv_count" ]; then

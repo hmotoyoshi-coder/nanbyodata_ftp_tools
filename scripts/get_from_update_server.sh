@@ -4,11 +4,15 @@
 source ./scripts/get_from_api_functions.sh
 
 tmp_directory=tmp
+# 本番
 # target_directory="/work/data"
-target_directory="/home/s.shimizu/DBCLS/test_data" #
+# 検証
+target_directory="/home/s.shimizu/DBCLS/test_data"
+# 本番
 # config_file_path="/work/configs/copy_file_list.csv"
+# 検証
 config_file_path="../configs/copy_file_list_local.csv"
-date_num=${DATE_NUM}
+date_num=${DATE_NUM:-$(date +%Y-%m-%d)}
 
 mkdir -p "${tmp_directory}"
 
@@ -27,17 +31,17 @@ while IFS=, read -r file_name_with_suffix file_path; do
     else
         qa_check "${tmp_directory}/${file_name_with_suffix}" "nando"
     fi
-done < ${config_file_path}
+done < "${config_file_path}"
 
 
 # target directoryに値がないとき、新しくlatestのリンクを作成し、古いファイルと新しいファイルの差分がない場合新しいファイルを作成する
-old_file=$(ls "${target_directory}" | grep -v latest | grep -v ${date_num} | sort | tail -n 1)
+old_file=$(ls "${target_directory}" | grep -v latest | grep -v "${date_num}" | sort | tail -n 1)
 check_target="${target_directory}/${old_file}"
 
 echo "${check_target}との差分を確認"
 
 target="${target_directory}/${date_num}"
-mkdir -p ${target}
+mkdir -p "${target}"
 
 for file in ${tmp_directory}/*; do
     [ -f "$file" ] || continue
@@ -54,4 +58,4 @@ if [ -f "${tmp_directory}/error.log" ]; then
     cat "${tmp_directory}/error.log" >> "${target}/error.log"
 fi
 
-rm -rf ${tmp_directory}
+rm -rf "${tmp_directory}"
