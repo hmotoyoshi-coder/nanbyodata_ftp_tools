@@ -6,6 +6,6 @@ testdata/
 .env
 
 # リモートにpushするか検討中
-# configs/
+configs/
 
 copy_source/
