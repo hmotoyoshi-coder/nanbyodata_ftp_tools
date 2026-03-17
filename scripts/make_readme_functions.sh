@@ -22,9 +22,12 @@ create_graph_version_list () {
 
         version="APIで取得"
 
-        if [[ "$version_format" != "API" && -n "$version_source" && -f "$version_source" ]]; then
-
-            line=$(grep -E "$version_format" "$version_source" | head -n 1)
+        # 本番
+        # if [[ "$version_format" != "API" && -n "$version_source" ]]; then
+        #     line=$(curl -s "$version_source" | grep -E "$version_format" | head -n 1)
+        # 検証
+        if [[ "$version_format" != "API" && -n "$version_source" && -f "$version_source" ]]; then #
+            line=$(grep -E "$version_format" "$version_source" | head -n 1)                       #
 
             date=$(echo "$line" | grep -oE "[0-9]{4}-[0-9]{2}-[0-9]{2}" | head -n 1)
 
@@ -54,8 +57,13 @@ read_version_from_server () {
 
         version="APIで取得"
 
-        if [[ -f "$file_path" && ( "$output_file" == *.ttl || "$output_file" == *.rdf ) ]]; then
-            line=$(grep -E "versionIRI|versionInfo" "$file_path" | head -n 1)
+        # 本番
+        # if [[ "$output_file" == *.ttl || "$output_file" == *.rdf ]]; then
+        #     line=$(curl -s "$file_path" | grep -E "versionIRI|versionInfo" | head -n 1)
+        # 検証
+        if [[ -f "$file_path" && ( "$output_file" == *.ttl || "$output_file" == *.rdf ) ]]; then #
+            line=$(grep -E "versionIRI|versionInfo" "$file_path" | head -n 1)                    #
+
             date=$(echo "$line" | grep -oE "[0-9]{4}-[0-9]{2}-[0-9]{2}" | head -n 1)
 
             if [ -n "$date" ]; then
