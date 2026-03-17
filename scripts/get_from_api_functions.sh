@@ -47,17 +47,17 @@ get_all () {
     declare -A api_map
     local config_file_path=${config_file_path}
 
-    while IFS=, read -r output api version; do
+    while IFS=, read -r output_file api_url graph; do
         # ヘッダーを省く
-        if [ "$output" = "output" ]; then
+        if [ "$output_file" = "output_file" ]; then
             continue
         fi
-        api_map["$api"]="$output"
+        api_map["$api_url"]="$output_file"
     done < "${config_file_path}"
 
-    for api in ${!api_map[@]}; do
-        local api_uri=${api}
-        local file_name="${api_map[$api]}"
+    for api_url in ${!api_map[@]}; do
+        local api_uri=${api_url}
+        local file_name="${api_map[$api_url]}"
 
         # データを取得できなかった場合、次のデータの取得に移行する
         get_data

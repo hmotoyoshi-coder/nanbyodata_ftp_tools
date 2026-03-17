@@ -16,18 +16,17 @@ config_directory=../configs
 
 source ./scripts/make_readme_functions.sh
 # 本番
-# copy_file_list_path="${config_directory}/copy_file_list.csv"
+# copy_file_list_path="${config_directory}/file_list.csv"
 # 検証
-copy_file_list_path="${config_directory}/copy_file_list_local.csv"
+copy_file_list_path="${config_directory}/file_list.csv"
 
 mkdir -p "${tmp_directory}"
 echo "file,datasource,update" > "${tmp_output_file_path}"
 
-# nandoの更新日(サーバーから取得)
-# file_nameを抽出 > サフィックスを切り捨て > データ名に変換
-read_version_from_server
-
 create_graph_version_list
+
+# nandoの更新日(サーバーから取得)
+read_version_from_server
 
 # APIから取得するデータの更新日
 config_file_path="${config_directory}/api_list.csv"

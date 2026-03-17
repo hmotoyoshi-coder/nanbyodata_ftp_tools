@@ -1,5 +1,5 @@
 #!/bin/bash
-# bash get_from_api.sh -c configs/api_list.csv -a
+# bash get_from_api.sh
 
 source ./scripts/get_from_api_functions.sh
 
@@ -20,7 +20,7 @@ mkdir -p "${tmp_directory}"
 get_all
 
 # target directoryに値がないとき、新しくlatestのリンクを作成し、古いファイルと新しいファイルの差分がない場合新しいファイルを作成する
-old_file=$(ls "${target_directory}" 2>/dev/null | grep -v latest | grep -v ${date_num} | sort | tail -n 1)
+old_file=$(ls "${target_directory}" 2>/dev/null | grep -v latest | grep -v "${date_num}" | sort | tail -n 1)
 check_target="${target_directory}/${old_file}"
 
 echo "${check_target}との差分を確認"
