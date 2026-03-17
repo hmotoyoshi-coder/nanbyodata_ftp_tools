@@ -29,7 +29,7 @@ while IFS=, read -r output_file file_path graph; do
     if ! cp "${file_path}" "${tmp_directory}/"; then
         echo "[ERROR] ${file_path} のコピー失敗" >> "${tmp_directory}/error.log"
     else
-        qa_check "${tmp_directory}/${output_file}" "nando"
+        qa_check "${tmp_directory}/${output_file}" "file"
     fi
 done < "${config_file_path}"
 
