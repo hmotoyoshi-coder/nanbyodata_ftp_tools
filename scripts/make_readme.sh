@@ -2,23 +2,19 @@
 # bash make_readme.sh
 
 # 本番
-# target_directory=data
+target_directory=data
+config_directory=configs
+copy_file_list_path="${config_directory}/file_list.csv"
+
 # 検証
-target_directory=../test_data
+# target_directory=../test_data
+# config_directory=../configs
+# copy_file_list_path="${config_directory}/file_list.csv"
 
 tmp_directory=tmp
 tmp_output_file_path=${tmp_directory}/release_note.csv
 
-# 本番
-# config_directory=configs
-# 検証
-config_directory=../configs
-
 source ./scripts/make_readme_functions.sh
-# 本番
-# copy_file_list_path="${config_directory}/file_list.csv"
-# 検証
-copy_file_list_path="${config_directory}/file_list.csv"
 
 mkdir -p "${tmp_directory}"
 echo "file,datasource,update" > "${tmp_output_file_path}"

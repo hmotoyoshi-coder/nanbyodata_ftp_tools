@@ -5,13 +5,11 @@ source ./scripts/get_from_api_functions.sh
 
 tmp_directory=tmp
 # 本番
-# target_directory="/work/data"
+target_directory="/work/data"
+config_file_path="/work/configs/api_list.csv"
 # 検証
-target_directory="../test_data" 
-# 本番
-# config_file_path="/work/configs/api_list.csv"
-# 検証
-config_file_path="../configs/api_list.csv"
+# target_directory="../test_data" 
+# config_file_path="../configs/api_list.csv"
 date_num=${DATE_NUM:-$(date +%Y-%m-%d)}
 
 mkdir -p "${tmp_directory}"

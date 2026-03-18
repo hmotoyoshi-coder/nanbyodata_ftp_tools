@@ -5,13 +5,11 @@ source ./scripts/get_from_api_functions.sh
 
 tmp_directory=tmp
 # 本番
-# target_directory="/work/data"
+target_directory="/work/data"
+config_file_path="/work/configs/file_list.csv"
 # 検証
-target_directory="../test_data"
-# 本番
-# config_file_path="/work/configs/file_list.csv"
-# 検証
-config_file_path="../configs/file_list.csv"
+# target_directory="../test_data"
+# config_file_path="../configs/file_list.csv"
 date_num=${DATE_NUM:-$(date +%Y-%m-%d)}
 
 mkdir -p "${tmp_directory}"
@@ -23,18 +21,18 @@ while IFS=, read -r output_file file_path graph; do
         continue
     fi
     # 本番
-    # if ! scp -P "${REMOTE_PORT}" -o StrictHostKeyChecking=no "${REMOTE_USER}@${REMOTE_HOST}:${file_path}" "${tmp_directory}/${output_file}"; then
-    #     echo "[ERROR] ${file_path} のコピー失敗" >> "${tmp_directory}/error.log"
-    # else
-    #     qa_check "${tmp_directory}/${output_file}" "file"
-    # fi
-
-    # ローカル検証
-    if ! cp "${file_path}" "${tmp_directory}/${output_file}"; then
+    if ! scp -P "${REMOTE_PORT}" -o StrictHostKeyChecking=no "${REMOTE_USER}@${REMOTE_HOST}:${file_path}" "${tmp_directory}/${output_file}"; then
         echo "[ERROR] ${file_path} のコピー失敗" >> "${tmp_directory}/error.log"
     else
         qa_check "${tmp_directory}/${output_file}" "file"
     fi
+
+    # ローカル検証
+    # if ! cp "${file_path}" "${tmp_directory}/${output_file}"; then
+    #     echo "[ERROR] ${file_path} のコピー失敗" >> "${tmp_directory}/error.log"
+    # else
+    #     qa_check "${tmp_directory}/${output_file}" "file"
+    # fi
 done < "${config_file_path}"
 
 
