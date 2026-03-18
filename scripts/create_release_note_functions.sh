@@ -77,23 +77,6 @@ read_version_from_server () {
 
         version="APIで取得"
 
-        # 本番
-        if [[ "$output_file" == *.ttl || "$output_file" == *.rdf ]]; then
-            line=$(curl -s "$file_path" | grep -E "versionIRI|versionInfo" | head -n 1)
-            date=$(echo "$line" | grep -oE "[0-9]{4}-[0-9]{2}-[0-9]{2}" | head -n 1)
-            if [ -n "$date" ]; then
-                version=$(echo "$date" | sed 's/-/\//g')
-            fi
-        fi
-        # 検証
-        # if [[ -f "$file_path" && ( "$output_file" == *.ttl || "$output_file" == *.rdf ) ]]; then
-        #     line=$(grep -E "versionIRI|versionInfo" "$file_path" | head -n 1)
-        #     date=$(echo "$line" | grep -oE "[0-9]{4}-[0-9]{2}-[0-9]{2}" | head -n 1)
-        #     if [ -n "$date" ]; then
-        #         version=$(echo "$date" | sed 's/-/\//g')
-        #     fi
-        # fi
-
         row=$(awk -F'\t' -v graph="$graph" '$1==graph{print;exit}' "${tmp_directory}/graph_version.tsv")
 
         datasource=$(echo "$row" | awk -F'\t' '{print $2}')

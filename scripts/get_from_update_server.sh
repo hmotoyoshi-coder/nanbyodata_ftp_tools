@@ -21,7 +21,7 @@ while IFS=, read -r output_file file_path graph; do
         continue
     fi
     # 本番
-    if ! scp -P "${REMOTE_PORT}" -o StrictHostKeyChecking=no "${REMOTE_USER}@${REMOTE_HOST}:${file_path}" "${tmp_directory}/${output_file}"; then
+    if ! sshpass -p "${SFTP_PW}" scp -P "${REMOTE_PORT}" -o StrictHostKeyChecking=no "${REMOTE_USER}@${REMOTE_HOST}:${file_path}" "${tmp_directory}/${output_file}"; then
         echo "[ERROR] ${file_path} のコピー失敗" >> "${tmp_directory}/error.log"
     else
         qa_check "${tmp_directory}/${output_file}" "file"
