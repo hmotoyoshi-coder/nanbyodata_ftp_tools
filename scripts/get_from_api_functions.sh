@@ -48,6 +48,10 @@ get_all () {
     local config_file_path=${config_file_path}
 
     while IFS=, read -r output_file api_url graph; do
+        # 空行スキップ
+        if [ -z "$output_file" ]; then
+            continue
+        fi
         # ヘッダーを省く
         if [ "$output_file" = "output_file" ]; then
             continue

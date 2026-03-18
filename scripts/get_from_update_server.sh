@@ -16,6 +16,10 @@ mkdir -p "${tmp_directory}"
 
 # 全データ取得
 while IFS=, read -r output_file file_path graph; do
+    # 空行スキップ
+    if [ -z "$output_file" ]; then
+        continue
+    fi
     # ヘッダーを省く
     if [ "$output_file" = "output_file" ]; then
         continue

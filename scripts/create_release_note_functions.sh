@@ -26,6 +26,10 @@ create_graph_version_list () {
     awk -F',' 'NR>1 {print $1 "|" $2 "|" $3 "|" $4}' "$config_file" | \
     while IFS="|" read -r graph version_source datasource version_format
     do
+        # 空行スキップ    
+        if [ -z "$graph" ]; then
+            continue
+        fi
         graph=$(echo "$graph" | tr -d '\r')
         version_source=$(echo "$version_source" | tr -d '\r')
         datasource=$(echo "$datasource" | tr -d '\r')
@@ -67,13 +71,18 @@ read_version_from_server () {
 
     while IFS=, read -r output_file file_path graph
     do
-        output_file=$(echo "$output_file" | tr -d '\r')
-        file_path=$(echo "$file_path" | tr -d '\r')
-        graph=$(echo "$graph" | tr -d '\r')
-
+        # 空行スキップ
+        if [ -z "$output_file" ]; then
+            continue
+        fi
+        # ヘッダー行をスキップ
         if [ "$output_file" = "output_file" ]; then
             continue
         fi
+        
+        output_file=$(echo "$output_file" | tr -d '\r')
+        file_path=$(echo "$file_path" | tr -d '\r')
+        graph=$(echo "$graph" | tr -d '\r')
 
         version="APIで取得"
 
@@ -96,9 +105,13 @@ read_version_from_api () {
     local output="${tmp_output_file_path}"
     local graph_version_file="${tmp_directory}/graph_version.tsv"
 
-    while IFS=, read -r output_file api_url graph; do
-
-	# ヘッダー行をスキップ
+    while IFS=, read -r output_file api_url graph
+    do
+        # 空行スキップ
+        if [ -z "$output_file" ]; then
+            continue
+        fi
+	    # ヘッダー行をスキップ
     	if [ "$output_file" = "output_file" ]; then
             continue
     	fi
