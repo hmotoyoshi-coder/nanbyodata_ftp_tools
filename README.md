@@ -61,7 +61,7 @@ Create a .env file in the root directory and define the following variables:
 
         ```csv
         output_file,api_url,graph
-        genes,http://localhost/api/get_genes,'Fetched via API',http://localohost/genes
+        genes,http://localhost/api/get_genes,http://localhost/genes
         ```
 
     * **file_list.csv**
