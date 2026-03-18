@@ -16,8 +16,8 @@
 Since some tools require SSH access from within the container via host settings, you must configure `ssh-agent`. Run the following commands on your **host machine**:
 
     ```sh
+    eval "$(ssh-agent -s)"
     ssh-add <path_to_private_key>
-    ssh-agent
     ```
 
 #### .env Configuration
@@ -34,7 +34,9 @@ Create a .env file in the root directory and define the following variables:
     # Remote Server Settings
     REMOTE_HOST=
     REMOTE_USER=
+    REMOTE_USER_GROUP=
     REMOTE_PORT=
+    SFTP_PW=
 
     UID=
     GID=
@@ -53,44 +55,54 @@ Create a .env file in the root directory and define the following variables:
 2.  **Edit CSV Settings:**
 
     * **api_list.csv**
-        * `output`: Output filename (without extension).
-        * `api`: The API endpoint used for retrieval.
-        * `version`: The version identifier.
+        * `output_file`: Output filename (without extension).
+        * `api_url`: The API endpoint used for retrieval.
+        * `graph`: Reference graph.
 
         ```csv
-        output,api,version
-        genes,https://localhost/api/get_genes,'Fetched via API'
+        output_file,api_url,graph
+        genes,http://localhost/api/get_genes,'Fetched via API',http://localohost/genes
         ```
 
-    * **copy_file_list.csv**
-        * `file_name_with_suffix`: Filename including extension.
+    * **file_list.csv**
+        * `output_file`: Filename including extension.
         * `file_path`: Source file path for copying.
+        * `graph`: Reference graph.
 
         ```csv
-        file_name_with_suffix,file_path
-        nando.rdf,temp/nando/nando.rdf
+        output_file,file_path,graph
+        nando.rdf,temp/nando/nando.rdf,http://localhost/nando
         ```
 
     * **graph_source.csv**
         * `graph`: NanbyoData API graph name.
         * `version_source`: Path to the source data for the graph.
-        * `format`: Regex pattern to extract the version string.
+        * `datasource`: Data source for the graph.
+        * `version_format`: Where version written on.
 
         ```csv
-        graph,version_source,format
-        https://localhost/example,temp/example/example.owl,<owl:versionIRI rdf:resource="http://example/releases/([0-9]{4}-[0-9]{2}-[0-9]{2})/example.owl"/>
+        graph,version_source,datasource,version_format
+        https://localhost/example,temp/example/example.owl,temp/example/example.owl,Example DB,owl:versionIRI
         ```
 
 ### 3. Running the Tools
 
 * **To fetch data from the API:**
+
     ```bash
     docker compose run --rm -it dlfile_cp scripts/get_from_api.sh
     ```
 
 * **To fetch data from the update server:**
+
     ```bash
     docker compose run --rm -it dlfile_cp scripts/get_from_update_server.sh
+    ```
+
+* **To create release memo:**
+
+    ```bash
+    docker compose run --rm lfile_cp scripts/make_readme.sh
     ```
 
 ## Notes
