@@ -85,6 +85,12 @@ Create a .env file in the root directory and define the following variables:
         https://localhost/example,temp/example/example.owl,temp/example/example.owl,Example DB,owl:versionIRI
         ```
 
+### 3. Build the image
+
+```bash
+docker compose build dlfile_cp --build-arg UID=${UID} --build-arg GID=${GID} --build-arg REMOTE_USER=${REMOTE_USER} --build-arg REMOTE_USER_GROUP=${REMOTE_USER_GROUP}
+```
+
 ### 3. Running the Tools
 
 * **To fetch data from the API:**
