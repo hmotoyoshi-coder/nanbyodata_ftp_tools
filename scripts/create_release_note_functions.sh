@@ -3,14 +3,25 @@
 create_graph_version_list () {
 
     # 本番
-    # local config_file="${config_directory}/graph_source.csv"
-    # 検証
     local config_file="${config_directory}/graph_source.csv"
+    # 検証
+    # local config_file="${config_directory}/graph_source.csv"
     local output_file="${tmp_directory}/graph_version.tsv"
 
-    mkdir -p "${tmp_directory}"
+    mkdir -p "${tmp_directory}/sources"
 
     echo -e "graph\tdatabase\tversion" > "${output_file}"
+
+    # version_source取得
+    awk -F',' 'NR>1 && $2 != "" {print "get \"" $2 "\" \"" "'"${tmp_directory}"'/sources/" "\""}' "$config_file" > "${tmp_directory}/source_list.bat"
+    if [ -s "${tmp_directory}/source_list.bat" ]; then
+        if ! sshpass -p "${SFTP_PW}" sftp \
+            -o "StrictHostKeyChecking=no" \
+            -o "UserKnownHostsFile=/dev/null" \
+            "${REMOTE_USER}@${REMOTE_HOST}" < "${tmp_directory}/source_list.bat"; then
+            echo "[ERROR] can not copy source file." >> "${tmp_directory}/error.log"
+        fi
+    fi
 
     awk -F',' 'NR>1 {print $1 "|" $2 "|" $3 "|" $4}' "$config_file" | \
     while IFS="|" read -r graph version_source datasource version_format
@@ -23,18 +34,27 @@ create_graph_version_list () {
         version="APIで取得"
 
         # 本番
-        # if [[ "$version_format" != "API" && -n "$version_source" ]]; then
-        #     line=$(curl -s "$version_source" | grep -E "$version_format" | head -n 1)
-        # 検証
-        if [[ "$version_format" != "API" && -n "$version_source" && -f "$version_source" ]]; then #
-            line=$(grep -E "$version_format" "$version_source" | head -n 1)                       #
-
-            date=$(echo "$line" | grep -oE "[0-9]{4}-[0-9]{2}-[0-9]{2}" | head -n 1)
-
-            if [ -n "$date" ]; then
-                version=$(echo "$date" | sed 's/-/\//g')
+        if [[ -n "$version_source" ]]; then
+            version_source_file=$(basename "$version_source")
+            tmp_version_source="${tmp_directory}/sources/${version_source_file}"
+            if [[ -f "$tmp_version_source" ]]; then
+                line=$(grep -E "$version_format" "$tmp_version_source" | head -n 1)
+                date=$(echo "$line" | grep -oE "[0-9]{4}-[0-9]{2}-[0-9]{2}" | head -n 1)
+                if [ -n "$date" ]; then
+                    version=$(echo "$date" | sed 's/-/\//g')
+                fi
+            else
+                echo "[ERROR] there is not ${graph} version source file" >> "${tmp_directory}/error.log"
             fi
         fi
+        # 検証
+        # if [[ "$version_format" != "API" && -n "$version_source" && -f "$version_source" ]]; then
+        #     line=$(grep -E "$version_format" "$version_source" | head -n 1)
+        #     date=$(echo "$line" | grep -oE "[0-9]{4}-[0-9]{2}-[0-9]{2}" | head -n 1)
+        #     if [ -n "$date" ]; then
+        #         version=$(echo "$date" | sed 's/-/\//g')
+        #     fi
+        # fi
 
         echo -e "${graph}\t${datasource}\t${version}" >> "${output_file}"
 
@@ -58,18 +78,21 @@ read_version_from_server () {
         version="APIで取得"
 
         # 本番
-        # if [[ "$output_file" == *.ttl || "$output_file" == *.rdf ]]; then
-        #     line=$(curl -s "$file_path" | grep -E "versionIRI|versionInfo" | head -n 1)
-        # 検証
-        if [[ -f "$file_path" && ( "$output_file" == *.ttl || "$output_file" == *.rdf ) ]]; then #
-            line=$(grep -E "versionIRI|versionInfo" "$file_path" | head -n 1)                    #
-
+        if [[ "$output_file" == *.ttl || "$output_file" == *.rdf ]]; then
+            line=$(curl -s "$file_path" | grep -E "versionIRI|versionInfo" | head -n 1)
             date=$(echo "$line" | grep -oE "[0-9]{4}-[0-9]{2}-[0-9]{2}" | head -n 1)
-
             if [ -n "$date" ]; then
                 version=$(echo "$date" | sed 's/-/\//g')
             fi
         fi
+        # 検証
+        # if [[ -f "$file_path" && ( "$output_file" == *.ttl || "$output_file" == *.rdf ) ]]; then
+        #     line=$(grep -E "versionIRI|versionInfo" "$file_path" | head -n 1)
+        #     date=$(echo "$line" | grep -oE "[0-9]{4}-[0-9]{2}-[0-9]{2}" | head -n 1)
+        #     if [ -n "$date" ]; then
+        #         version=$(echo "$date" | sed 's/-/\//g')
+        #     fi
+        # fi
 
         row=$(awk -F'\t' -v graph="$graph" '$1==graph{print;exit}' "${tmp_directory}/graph_version.tsv")
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-# bash make_readme.sh
+# bash create_release_note.sh
 
 # 本番
 target_directory=data
@@ -14,7 +14,7 @@ copy_file_list_path="${config_directory}/file_list.csv"
 tmp_directory=tmp
 tmp_output_file_path=${tmp_directory}/release_note.csv
 
-source ./scripts/make_readme_functions.sh
+source ./scripts/create_release_note_functions.sh
 
 mkdir -p "${tmp_directory}"
 echo "file,datasource,update" > "${tmp_output_file_path}"

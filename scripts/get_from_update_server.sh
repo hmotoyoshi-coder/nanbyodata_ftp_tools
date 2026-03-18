@@ -27,7 +27,7 @@ while IFS=, read -r output_file file_path graph; do
         qa_check "${tmp_directory}/${output_file}" "file"
     fi
 
-    # ローカル検証
+    # 検証
     # if ! cp "${file_path}" "${tmp_directory}/${output_file}"; then
     #     echo "[ERROR] ${file_path} のコピー失敗" >> "${tmp_directory}/error.log"
     # else
