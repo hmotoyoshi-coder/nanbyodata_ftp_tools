@@ -91,7 +91,7 @@ Create a .env file in the root directory and define the following variables:
 docker compose build dlfile_cp --build-arg UID=${UID} --build-arg GID=${GID} --build-arg REMOTE_USER=${REMOTE_USER} --build-arg REMOTE_USER_GROUP=${REMOTE_USER_GROUP}
 ```
 
-### 3. Running the Tools
+### 4. Running the Tools
 
 * **To fetch data from the API:**
 
