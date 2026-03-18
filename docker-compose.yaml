@@ -1,15 +1,16 @@
 services:
   dlfile_cp:
     build: .
+    image: nanbyodata_ftp_tools
     volumes:
       - ${CONFIG_PATH:-./configs}:/work/configs
       - ${TARGET_DIRECTORY:-./download}:/work/data
       - ./scripts:/work/scripts
       - ${SSH_AUTH_SOCK}:/tmp/ssh-agent.sock
-        # user: "${UID}:${GID}"
+    user: "${UID}:${GID}"
     environment:
-      DATE_NUM: "2026-03-05"
+      DATE_NUM: "${DATE_NUM}"
       SSH_AUTH_SOCK: /tmp/ssh-agent.sock
       REMOTE_HOST: ${REMOTE_HOST}
       REMOTE_USER: ${REMOTE_USER}
-
+      SFTP_PW: ${SFTP_PW}
