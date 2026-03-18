@@ -26,7 +26,7 @@ echo "${check_target}との差分を確認"
 target="${target_directory}/${date_num}"
 mkdir -p "${target}"
 
-for file in ${tmp_directory}/*; do
+for file in "${tmp_directory}"/*; do
     [ -f "$file" ] || continue
     file=$(basename "$file")
     cp_file

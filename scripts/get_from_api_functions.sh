@@ -59,7 +59,7 @@ get_all () {
         api_map["$api_url"]="$output_file"
     done < "${config_file_path}"
 
-    for api_url in ${!api_map[@]}; do
+    for api_url in "${!api_map[@]}"; do
         local api_uri=${api_url}
         local file_name="${api_map[$api_url]}"
 

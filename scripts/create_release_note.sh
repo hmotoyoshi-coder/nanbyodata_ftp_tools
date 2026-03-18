@@ -34,6 +34,10 @@ printf '# Release Note\n\n' > "${output_file_path}"
 duckdb -markdown -c "SELECT * FROM read_csv('${tmp_output_file_path}', header=true)" >> "${output_file_path}"
 
 # latestに移行
+if [ ! -L "${target_directory}/latest" ]; then
+    echo "[ERROR] latest not found"
+    exit 1
+fi
 latest_dir=$(readlink "${target_directory}/latest")
 latest_path="${target_directory}/${latest_dir#./}"
 release_target="${latest_path}/RELEASE.txt"
