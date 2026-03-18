@@ -82,7 +82,7 @@ Create a .env file in the root directory and define the following variables:
 
         ```csv
         graph,version_source,datasource,version_format
-        https://localhost/example,temp/example/example.owl,temp/example/example.owl,Example DB,owl:versionIRI
+        https://localhost/example,temp/example/example.owl,Example DB,owl:versionIRI
         ```
 
 ### 3. Build the image
