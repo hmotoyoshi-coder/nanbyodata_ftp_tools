@@ -108,7 +108,7 @@ docker compose build dlfile_cp --build-arg UID=${UID} --build-arg GID=${GID} --b
 * **To create release memo:**
 
     ```bash
-    docker compose run --rm lfile_cp scripts/make_readme.sh
+    docker compose run --rm dlfile_cp scripts/create_release_note.sh
     ```
 
 ## Notes
